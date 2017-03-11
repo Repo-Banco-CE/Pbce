@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cuenta;
+use Session;
 
 class CuentasController extends Controller
 {
@@ -15,6 +16,11 @@ class CuentasController extends Controller
     public function index()
     {
         //
+            
+        
+        $cuentas= Cuenta::all();
+
+        return view('admin.cuentas.index')->with('cuentas',$cuentas);
     }
 
     /**
@@ -25,6 +31,7 @@ class CuentasController extends Controller
     public function create()
     {
         //
+        
     }
 
     /**
@@ -95,6 +102,7 @@ class CuentasController extends Controller
     public function show($id)
     {
         //
+        dd('cuenta de usuario');
     }
 
     /**

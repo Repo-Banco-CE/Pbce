@@ -20,7 +20,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Consultar Cuenta<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Consultar Saldo</a></li>
+            <li><a href="{{ route('cuentas.index')}}">Consultar Saldo</a></li>
             <li><a href="#">Editar Datos</a></li>
           </ul>
         </li>
@@ -36,7 +36,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Página principal</a></li>
+        <li><a href="{{ route('users.index')}}">Página principal</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
           <span class="glyphicon glyphicon-user" aria-hidden="true">{{ Auth::user()->nombre }} </span> 
