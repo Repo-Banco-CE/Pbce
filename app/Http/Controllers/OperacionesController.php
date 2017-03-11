@@ -3,12 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\CategoryRequest;
-use App\Category;
-use Laracasts\Flash\Flash;
 
-
-class CategoriesController extends Controller
+class OperacionesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +14,6 @@ class CategoriesController extends Controller
     public function index()
     {
         //
-        $categories=Category::orderBy('id','DESC')->paginate(5);
-        return view('admin.categories.index')->with('categories',$categories);
     }
 
     /**
@@ -30,8 +24,6 @@ class CategoriesController extends Controller
     public function create()
     {
         //
-
-        return view('admin.categories.create');
     }
 
     /**
@@ -40,16 +32,13 @@ class CategoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryRequest $request)
+    public function store(Request $request)
     {
         //
-        $category= new Category($request->all());
-        //dd($category);
-        $category->save();
-
-        flash('Se ha Registrado la categoría "'.$category->name.'" exitosamente', 'success');
-        return redirect('admin/categories');
-
+        //
+        $nombre=$request->input('nombre');
+        $apellido=$request->input('apellido');
+        return response()->json($apellido);
     }
 
     /**
@@ -72,9 +61,6 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         //
-        $category = Category::find($id);
-
-        return view('admin.categories.edit')->with('category',$category);
     }
 
     /**
@@ -87,12 +73,6 @@ class CategoriesController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $category=Category::find($id);
-        $category->fill($request->all());
-        $category->save();
-        flash('Se ha modificado la Categoria "'.$category->name.'" exitosamente', 'warning');
-        return redirect('admin/categories');
-        //dd($category->name);
     }
 
     /**
@@ -104,9 +84,5 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         //
-        $category = Category::find($id);
-        $category->delete();
-        flash('Se ha eliminado la Categoria "'.$category->name.'" exitosamente', 'warning');
-        return redirect('admin/categories');
     }
 }

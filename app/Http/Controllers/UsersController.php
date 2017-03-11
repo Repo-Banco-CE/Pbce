@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Juridica;
+use App\Natural;
+use App\Cuenta;
+use App\Cuenta_Usuario;
 use Laracasts\Flash\Flash;
 use App\Http\Requests\UserRequest;
 
@@ -45,19 +49,110 @@ class UsersController extends Controller
     public function store(UserRequest $request)
     {
         
-     //   dd($request->all());
-        $user= new User($request->all());
-      //  dd($user);
-       // dd($request->tipo);
+        /*****************************
+         * Agrega usuario a la tabla *
+         *****************************/
+
+        $user= new User();
+        $user->email=$request->email;
         $user->password=bcrypt($request->password);
-        $user->type=$request->type;
-    //    dd($user->type);
-        
+        $user->nombre=$request->nombre;
+        $user->direccion=$request->direccion;
+        $user->telefono=$request->telefono;        
         $user->save();
 
-        //Solucionar problema de leer el tipo de usuario
-        flash('Se ha Registrado a "'.$user->name.'" exitosamente', 'success');
+        /******************************
+         * Agrega juridico a la tabla *
+         ******************************/
+
+        $user2 = User::where('email',$user->email)->first();
+
+        if ($request->tipo_usuario == 'juridico') {
+        
+        $rif='V-'.$request->rif;
+        $id= $user2->id;
+
+        $juridico= new Juridica();
+        $juridico->rif=$rif;
+        $juridico->user_id=$id;
+        $juridico->save();
+
+        }else{
+
+        $cedula=$request->cedula;
+        $id= $user2->id;
+
+        $natural= new Natural();
+        $natural->cedula=$cedula;
+        $natural->user_id=$id;
+        $natural->save();
+
+        }
+        
+
+       
+       
+        /****************************
+         * Agrega cuenta a la tabla *
+         ****************************/
+
+        $cuenta= new Cuenta();
+/*
+        Entidad: XXXX 
+        Número de oficina: XXXX 
+        Dígitos de control (DC): XX
+        Número de cuenta: XXXX-XXXX-XX
+*/
+        
+        $user_id= $id;
+
+        /**
+         *  Verificación de cuentas, solo se crea si la cuenta no existe en la BD 
+         */
+        
+        do {
+            
+            $parte1=rand(1000, 9999);
+            $parte2=rand(1000, 9999);
+            $parte3=rand(10, 99);
+
+            $numero_cuenta='2283-5023-75-'.$parte1.'-'.$parte2.'-'.$parte3;
+
+        } while (count(Cuenta::where('numero',$numero_cuenta)->first()) > 0);
+
+        $cuenta->numero=$numero_cuenta;
+        $cuenta->tipo='Corriente';
+        $cuenta->saldo_cuenta=1000000;
+        $cuenta->limite=100000;
+        $cuenta->saldo=100000;
+        $cuenta->cupo_disponible=100000;
+        $cuenta->fecha_corte=10;
+
+        $cuenta->save();
+
+//        printf('Numero de Cuenta <br>'.$cuenta->numero);
+     
+        $query=Cuenta::where('numero',$numero_cuenta)->first();
+
+        /**************************************
+         * Agrega Cuentas_Usuarios a la tabla *
+         **************************************/
+
+        $cuentas= new Cuenta_Usuario();   
+        $cuentas->user_id=$id;
+        $cuentas->cuenta_id=$query->id;
+    
+        $cuentas->save();
+/*
+        printf($cuentas.'<br>');
+        printf($juridico.'<br>');
+        printf($user);
+*/
+        flash('Se ha Registrado a "'.$user->nombre.'" exitosamente', 'success');
+   //     return view('admin.juridicas.create-juridico')->with('user',$user2);
         return redirect()->route('admin.auth.login');
+
+
     }
 
     /**

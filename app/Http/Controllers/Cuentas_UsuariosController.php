@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\TagRequest;
-use App\Tag;
-use Laracasts\Flash\Flash;
+use App\Cuenta_Usuario;
 
-class TagsController extends Controller
+class Cuentas_UsuariosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +15,6 @@ class TagsController extends Controller
     public function index()
     {
         //
-        $tags= Tag::OrderBy('id','DESC')->paginate(5);
-        return view('admin.tags.index')->with('tags',$tags);
     }
 
     /**
@@ -29,7 +25,6 @@ class TagsController extends Controller
     public function create()
     {
         //
-        return view('admin.tags.create');
     }
 
     /**
@@ -38,14 +33,15 @@ class TagsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TagRequest $request)
+    public function store(Request $request)
     {
         //
-        $tag= new Tag($request->all());
-        $tag->save();
+        $cuentas= new Cuenta_Usuario($request->all());   
 
-        flash('Se ha Registrado el Tag "'.$tag->name.'" exitosamente', 'success');
-        return redirect()->route('tags.index');
+     //   dd($cuentas);
+        $cuentas->save();
+
+        return view('admin.auth.login');    
     }
 
     /**
@@ -68,9 +64,6 @@ class TagsController extends Controller
     public function edit($id)
     {
         //
-        $tag= Tag::find($id);
-
-        return view('admin.tags.edit')->with('tag',$tag);
     }
 
     /**
@@ -83,11 +76,6 @@ class TagsController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $tag= Tag::find($id);
-        $tag->fill($request->all());
-        $tag->save();
-        flash('Se ha modificado el Tag "'.$tag->name.'" exitosamente', 'warning');
-        return redirect()->route('tags.index');
     }
 
     /**
@@ -99,10 +87,5 @@ class TagsController extends Controller
     public function destroy($id)
     {
         //
-        $tag= Tag::find($id);
-        $tag->delete();
-
-        flash('Se ha eliminado el Tag "'.$tag->name.'" exitosamente', 'warning');
-        return redirect()->route('tags.index');
     }
 }

@@ -31,7 +31,7 @@
 											</div>
 											
 											<div>
-												<a href="{{ route('admin.user.create-natural') }}">Registrarme</a>	
+												<a href="{{ route('admin.user.create-natural') }}" class="">Registrarse</a>	
 											</div>
 												
 									</div>
@@ -44,7 +44,7 @@
 											</div>	
 
 											<div>
-												<a href="{{ route('admin.user.create-juridico') }}">Registrarme</a>	
+												<a href="{{ route('admin.user.create-juridico') }}">Registrarse</a>	
 											</div>
 									</div>
 				

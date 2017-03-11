@@ -24,6 +24,11 @@ Route::group(['prefix' =>'admin', 'middleware' => 'auth'],function(){
 		'uses' => 'UsersController@destroy',
 		'as' => 'admin.users.destroy'
 		]);
+	Route::resource('cuentas','CuentasController');
+
+	Route::resource('juridicas','JuridicasController');
+
+	Route::resource('cuentas_usuarios','Cuentas_UsuariosController');
 
 });
 
@@ -39,10 +44,17 @@ Route::get('admin/users/create/natural',['as'	=>	'admin.user.create-natural'	,fu
 	return view('admin.users.create-natural');
 }]);
 
+
+
 Route::get('admin/users/create/juridico', ['as'	=>	'admin.user.create-juridico', function(){
 
 	return view('admin.users.create-juridico');
 }]);
+
+Route::post('admin/users/store/juridico', [
+		'uses'	=>	'UsersController@store',
+		'as'	=>	'admin.users.store-juridico'		
+]);
 
 ########################################################################################
 #									Login							                   #

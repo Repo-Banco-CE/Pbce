@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Banco RFA</a>
+      <a class="navbar-brand" href="{{ route('admin.welcome') }}">Banco RFA</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -38,9 +38,11 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#">Página principal</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+          <span class="glyphicon glyphicon-user" aria-hidden="true">{{ Auth::user()->nombre }} </span> 
+          <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ route('admin.auth.logout') }}">Salir</a></li>
+            <li><a href="{{ route('admin.auth.logout') }}"> Salir</a></li>
           </ul>
         </li>
       </ul>

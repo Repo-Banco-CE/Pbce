@@ -24,9 +24,13 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'min:4 | max:120 | required',
-            'email' => 'min:6 | max:250 | required | unique:users',
-            'password' => 'min:5 | max:250 | required'
+            'nombre'    => 'min:4 | max:120 | required',
+            'direccion' => 'min:6 | max:120 | required',
+            'telefono'  => 'min:10 | max:20 | required',
+            'email'     => 'min:6 | max:250 | required | unique:users',
+            'password'  => 'min:5 | max:250 | required | confirmed',
+            'rif'       => 'min:7 | max:8 | unique:juridicas',
+            'cedula'    => 'min:7 | max:8 | unique:naturales'
         ];
     }
 }
