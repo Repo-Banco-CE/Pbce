@@ -21,7 +21,7 @@ class AddCuentas extends Migration
             $table->integer('limite');
             $table->integer('saldo');
             $table->integer('cupo_disponible');
-            $table->integer('fecha_corte');
+            $table->string('fecha_corte');
  //           $table->integer('id_cuenta_usuario')->unsigned();
             $table->timestamps();
         });
