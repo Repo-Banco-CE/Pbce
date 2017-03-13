@@ -40,7 +40,7 @@
 											<br>
 											<div class="input-group">
 												<span class="input-group-addon ">Empresarial</span>
-												<a href="{{route('admin.auth.login')}}" class="btn btn-primary">Entrar</a>
+												<a href="{{route('admin.auth.login-juridico')}}" class="btn btn-primary">Entrar</a>
 											</div>	
 
 											<div>

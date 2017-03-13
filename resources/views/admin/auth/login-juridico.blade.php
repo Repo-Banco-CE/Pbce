@@ -1,6 +1,6 @@
 @extends('admin.templates.main')
 
-@section('title','Iniciar Sesión Usuario Natural')
+@section('title','Iniciar Sesión Usuario Juridico')
 
 @section('content')
 
@@ -21,7 +21,7 @@
 			{!! Form::submit('Iniciar Sesión', ['class' => 'btn btn-primary']) !!}	
 		</div>
 		
-		{{ Form::hidden('tipo_usuario', 'natural') }}
+		{{ Form::hidden('tipo_usuario', 'juridico') }}
 
 	{!! Form::close() !!}
 

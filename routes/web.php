@@ -65,6 +65,11 @@ Route::get('admin/auth/login', [
 		'as'	=>	'admin.auth.login'		
 	]);
 
+Route::get('admin/auth/login-juridico', [ 'as'	=>	'admin.auth.login-juridico', function(){
+
+	return view('admin.auth.login-juridico');
+}]);
+
 Route::post('admin/auth/login', [
 		'uses'	=>	'Auth\LoginController@postLogin',
 		'as'	=>	'admin.auth.postlogin'

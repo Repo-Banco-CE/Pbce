@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\User;
 
 class LoginController extends Controller
 {
@@ -49,12 +50,16 @@ class LoginController extends Controller
 
    public function postLogin(Request $request){
 
-   //  dd($request->all());
-   // dd($request->email);
-   // printf($request->clave);
+    $usuario= User::where('email',$request->email)->first();
+/*
+    echo($request->tipo_usuario);
+    echo($usuario->tipo);
+    dd($usuario);
+*/
+    if ($request->tipo_usuario == $usuario->tipo) {
+      
 
-
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+      if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // Authentication passed...
               return redirect()->intended('/admin/users');
               
@@ -62,9 +67,22 @@ class LoginController extends Controller
             flash('El correo o la contraseña no coinciden.', 'danger');
             return view('admin.auth.login');
         }
-     
 
-   }
+
+    }else{
+        
+        if ($request->tipo_usuario == 'natural') {
+          flash('Este usuario no se encuentra registrado.', 'danger');
+          return view('admin.auth.login');
+        }else{
+          flash('Este usuario no se encuentra registrado.', 'danger');
+          return view('admin.auth.login-juridico');
+        }
+      
+    }
+
+  
+    }
 
    public function logout(){
     Auth::logout();
