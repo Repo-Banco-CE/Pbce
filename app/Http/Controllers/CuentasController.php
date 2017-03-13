@@ -102,7 +102,11 @@ class CuentasController extends Controller
     public function show($id)
     {
         //
-        dd('cuenta de usuario');
+        
+        $cuenta= Cuenta::find($id);
+        return view('admin.cuentas.show')->with('cuenta',$cuenta);
+
+       
     }
 
     /**
