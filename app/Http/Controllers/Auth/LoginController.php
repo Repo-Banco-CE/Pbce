@@ -54,11 +54,19 @@ class LoginController extends Controller
 /*
     echo($request->tipo_usuario);
     echo($usuario->tipo);
-    dd($usuario);
-*/
+*/    
+    if ($usuario == null) {
+       if ($request->tipo_usuario == 'natural') {
+          flash('Este usuario no se encuentra registrado.', 'danger');
+          return view('admin.auth.login');
+        }else{
+          flash('Este usuario no se encuentra registrado.', 'danger');
+          return view('admin.auth.login-juridico');
+        }
+    }
+
     if ($request->tipo_usuario == $usuario->tipo) {
       
-
       if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // Authentication passed...
               return redirect()->intended('/admin/users');
@@ -67,7 +75,6 @@ class LoginController extends Controller
             flash('El correo o la contraseña no coinciden.', 'danger');
             return view('admin.auth.login');
         }
-
 
     }else{
         

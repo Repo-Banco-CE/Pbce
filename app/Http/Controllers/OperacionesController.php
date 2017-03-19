@@ -14,6 +14,7 @@ class OperacionesController extends Controller
     public function index()
     {
         //
+        dd("Página principal del api");
     }
 
     /**
@@ -36,9 +37,8 @@ class OperacionesController extends Controller
     {
         //
         //
-        $nombre=$request->input('nombre');
-        $apellido=$request->input('apellido');
-        return response()->json($apellido);
+       
+        return response()->json($request);
     }
 
     /**
@@ -85,4 +85,8 @@ class OperacionesController extends Controller
     {
         //
     }
+
+   
+
+
 }

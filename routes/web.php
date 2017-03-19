@@ -1,5 +1,5 @@
 <?php
-
+use App\Cuenta;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +25,17 @@ Route::group(['prefix' =>'admin', 'middleware' => 'auth'],function(){
 		'as' => 'admin.users.destroy'
 		]);
 	Route::resource('cuentas','CuentasController');
+
+	Route::get('cuenta/pagartarjeta', ['as'	=>	'cuenta.pagar-tarjeta' ,function(){
+
+		$cuentas= Cuenta::all();
+		return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
+	}]);
+
+	Route::post('cuenta/pagartarjeta', [
+		'uses'	=> 'CuentasController@pagartarjeta',
+		'as'	=>	'postcuenta.pagar-tarjeta' 
+	]);
 
 	Route::resource('juridicas','JuridicasController');
 

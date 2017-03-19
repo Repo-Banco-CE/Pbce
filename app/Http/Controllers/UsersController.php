@@ -146,6 +146,10 @@ class UsersController extends Controller
     
         $cuentas->save();
 
+        flash('Se ha Registrado a "'.$user->nombre.'" exitosamente', 'success');
+   //     return view('admin.juridicas.create-juridico')->with('user',$user2);
+        return redirect()->route('admin.auth.login-juridico');
+
         }else{
 
         $cuenta= new Cuenta();
@@ -177,7 +181,7 @@ class UsersController extends Controller
          */
         
         do {
-            $numero_tarjeta='2283-5023'.$parte1.'-'.$parte2;
+            $numero_tarjeta='22835023'.$parte1.''.$parte2;
 
         } while (count(Cuenta::where('numero',$numero_tarjeta)->first()) > 0);
 
@@ -206,6 +210,10 @@ class UsersController extends Controller
     
         $cuentas->save();
 
+        flash('Se ha Registrado a "'.$user->nombre.'" exitosamente', 'success');
+   //     return view('admin.juridicas.create-juridico')->with('user',$user2);
+        return redirect()->route('admin.auth.login');
+
         }
 
         
@@ -213,11 +221,11 @@ class UsersController extends Controller
         printf($cuentas.'<br>');
         printf($juridico.'<br>');
         printf($user);
-*/
+*//*
         flash('Se ha Registrado a "'.$user->nombre.'" exitosamente', 'success');
    //     return view('admin.juridicas.create-juridico')->with('user',$user2);
         return redirect()->route('admin.auth.login');
-
+*/
 
     }
 

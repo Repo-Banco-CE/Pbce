@@ -31,14 +31,15 @@
           </ul>
         </li>
           
-          
+                 
       @if(Auth::user()->tipo == 'natural')
         <li><a href="{{ route('cuentas.show', Auth::user()) }}">Consultar Tarjeta</a></li> 
-        <li><a href="#">Pagar Tarjeta</a></li>
+        <li><a href="{{ route('cuenta.pagar-tarjeta') }}">Pagar Tarjeta</a></li>
       @endif   
         <li><a href="#">Movimientos</a></li>
         <li><a href="#">Facturas</a></li>
         <li><a href="#">Reportes</a></li>
+        <li><a href="#">Transferencia</a></li>
         
       </ul>
       

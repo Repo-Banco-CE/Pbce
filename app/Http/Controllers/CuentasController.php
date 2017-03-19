@@ -142,4 +142,58 @@ class CuentasController extends Controller
     {
         //
     }
+
+     public function pagartarjeta(Request $request){
+     
+    if ($request->numero_cuenta == ' ' || $request->numero_tarjeta == ' ') {
+     //   printf('Debe llenar todos ls campos del formulario');
+        flash('Debe llenar todos los campos del formulario','danger');
+        $cuentas= Cuenta::all();
+
+        return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
+       
+    }else{
+
+        $numero_cuenta=$request->numero_cuenta;
+        $cuenta= Cuenta::where('numero',$numero_cuenta)->first();
+
+    //    printf('Saldo: '.$cuenta->saldo_cuenta);
+    //    printf('<br>Pago: '.$request->monto);
+        
+        if ($request->monto > $cuenta->saldo_cuenta) {
+           // printf('Su saldo es insuficiente, por favor verifique e intente nuevamente');
+            flash('Su saldo es insuficiente, por favor verifique e intente nuevamente','danger');
+
+            $cuentas= Cuenta::all();
+
+            return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
+
+        }else{
+          //  printf('<br>Procesando transaccion');
+
+            if ($cuenta->saldo == $cuenta->cupo_disponible) {
+            //    printf('<br>No se realizó la operacion debido a que su tarjeta no posee deuda');
+                flash('No se realizó la operacion debido a que su tarjeta no posee deuda','danger');
+                $cuentas= Cuenta::all();
+
+                return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
+
+            }else{
+                $cuenta->saldo_cuenta= $cuenta->saldo_cuenta-$request->monto;
+                $cuenta->saldo= $cuenta->saldo+$request->monto;
+                $cuenta->cupo_disponible= $cuenta->cupo_disponible+$request->monto;
+
+                flash('Se ha realizado el pago exitosamente','success');
+                $cuentas= Cuenta::all();
+
+                return view('admin.cuentas.index')->with('cuentas',$cuentas);
+
+            }
+            
+        }
+
+    }
+    
+
+    }
 }

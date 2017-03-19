@@ -18,4 +18,17 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 
-Route::resource('/operaciones','OperacionesController');
+
+
+Route::group(['prefix' => 'operaciones'], function() {
+
+/*
+Route::post('/pagartarjeta',[
+
+	'uses'	=>	'OperacionesController@pagartarjeta',
+	'as'	=>	'operaciones.pagar-tarjeta'
+
+	]);   
+*/
+});
+
