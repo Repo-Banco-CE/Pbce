@@ -20,15 +20,19 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::group(['prefix' => 'operaciones'], function() {
 
-/*
-Route::post('/pagartarjeta',[
 
-	'uses'	=>	'OperacionesController@pagartarjeta',
-	'as'	=>	'operaciones.pagar-tarjeta'
+Route::post('/pagocontarjeta',[
+
+	'uses'	=>	'OperacionesController@pagocontarjeta',
+	'as'	=>	'operaciones.pagocontarjeta'
 
 	]);   
-*/
-});
+
+
+Route::post('/login', [
+
+	'uses'	=> 'OperacionesController@login',
+	'as'	=> 'api-login'
+	]);
 

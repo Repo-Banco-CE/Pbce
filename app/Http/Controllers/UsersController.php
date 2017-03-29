@@ -57,7 +57,18 @@ class UsersController extends Controller
         $user->nombre=$request->nombre;
         $user->direccion=$request->direccion;
         $user->telefono=$request->telefono;        
-        $user->tipo=$request->tipo_usuario;        
+        $user->tipo=$request->tipo_usuario;
+        $user->afiliacion_comercial=0;
+
+
+        do {
+            
+            $token=str_random(15);
+
+        } while (count(User::where('remember_token',$token)->first()) > 0);
+
+
+        $user->remember_token= $token;      
         $user->save();
 
         /******************************
@@ -191,7 +202,7 @@ class UsersController extends Controller
         $cuenta->limite=100000;
         $cuenta->saldo=100000;
         $cuenta->cupo_disponible=100000;
-        $cuenta->fecha_corte=10;
+        $cuenta->fecha_corte="2017-5-10";
         $cuenta->numero_tarjeta=$numero_tarjeta;
 
         $cuenta->save();

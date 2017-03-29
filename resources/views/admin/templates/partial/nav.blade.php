@@ -27,7 +27,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Consultar Cuenta<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="{{ route('cuentas.index')}}">Consultar Saldo</a></li>
-            <li><a href="#">Editar Datos</a></li>
+            <li><a href="{{ route('cuenta.afiliacion') }}">Afiliación Comercial</a></li>
           </ul>
         </li>
           

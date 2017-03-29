@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Cuenta;
 use Session;
+use App\User;
 
 class CuentasController extends Controller
 {
@@ -43,7 +44,7 @@ class CuentasController extends Controller
     public function store(Request $request)
     {
         //
-
+        
         $cuenta= new Cuenta();
 /*
         Entidad: XXXX 
@@ -171,7 +172,7 @@ class CuentasController extends Controller
         }else{
           //  printf('<br>Procesando transaccion');
 
-            if ($cuenta->saldo == $cuenta->cupo_disponible) {
+            if ($cuenta->saldo == $cuenta->limite) {
             //    printf('<br>No se realizó la operacion debido a que su tarjeta no posee deuda');
                 flash('No se realizó la operacion debido a que su tarjeta no posee deuda','danger');
                 $cuentas= Cuenta::all();
@@ -182,6 +183,7 @@ class CuentasController extends Controller
                 $cuenta->saldo_cuenta= $cuenta->saldo_cuenta-$request->monto;
                 $cuenta->saldo= $cuenta->saldo+$request->monto;
                 $cuenta->cupo_disponible= $cuenta->cupo_disponible+$request->monto;
+                $cuenta->save();
 
                 flash('Se ha realizado el pago exitosamente','success');
                 $cuentas= Cuenta::all();
@@ -194,6 +196,29 @@ class CuentasController extends Controller
 
     }
     
+
+    }
+
+    public function afiliar($id){
+
+        $user= User::find($id);
+        $user->afiliacion_comercial=1;
+        $user->save();
+
+        flash('Su solicitud ha sido procesada exitosamente.' ,'success' );
+        $cuentas= Cuenta::all();
+        return view('admin.cuentas.index')->with('cuentas',$cuentas);
+    }
+
+    public function retirarse($id){
+
+        $user= User::find($id);
+        $user->afiliacion_comercial=0;
+        $user->save();
+
+        flash('Su solicitud ha sido procesada exitosamente.' ,'success' );
+        $cuentas= Cuenta::all();
+        return view('admin.cuentas.index')->with('cuentas',$cuentas);
 
     }
 }

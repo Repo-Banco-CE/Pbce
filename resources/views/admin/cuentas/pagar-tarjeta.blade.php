@@ -36,7 +36,7 @@
 		{!! Form::label('numero','Número de Cuenta a Debitar') !!}
 	@foreach($cuentas as $cuenta)
 					@if($cuenta->id == Auth::user()->id)
-		{!! Form::select('numero_cuenta', [' ' => ' ', $cuenta->numero  => $cuenta->numero ], null,['class' => 'form-control','required']) !!}
+		{!! Form::select('numero_cuenta', [$cuenta->numero  => $cuenta->numero ], null,['class' => 'form-control','required', 'placeholder' => 'Indique su Número de Cuenta']) !!}
 					@endif
 	@endforeach
 	</div>
@@ -45,7 +45,7 @@
 		{!! Form::label('numero_tarjeta','Número de Tarjeta a pagar') !!}
 	@foreach($cuentas as $cuenta)
 					@if($cuenta->id == Auth::user()->id)
-		{!! Form::select('numero_tarjeta', [' ' => ' ', $cuenta->numero_tarjeta  => $cuenta->numero_tarjeta ], null,['class' => 'form-control','required']) !!}
+		{!! Form::select('numero_tarjeta', [$cuenta->numero_tarjeta  => $cuenta->numero_tarjeta ], null,['class' => 'form-control','required', 'placeholder' => 'Indique el Número de su Tarjeta']) !!}
 					@endif
 	@endforeach
 	</div>

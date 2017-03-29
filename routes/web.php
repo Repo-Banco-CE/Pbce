@@ -37,6 +37,24 @@ Route::group(['prefix' =>'admin', 'middleware' => 'auth'],function(){
 		'as'	=>	'postcuenta.pagar-tarjeta' 
 	]);
 
+	Route::get('cuenta/afiliacion', ['as'	=>	'cuenta.afiliacion' ,function(){
+
+		$cuentas= Cuenta::all();
+		return view('admin.cuentas.afiliacion-comercial')->with('cuentas',$cuentas);
+	}]);
+
+	Route::get('cuenta/{id}/afiliar', [
+
+		'uses'	=>	'CuentasController@afiliar',
+		'as'	=>	'cuenta.afiliar' 
+	]);
+
+	Route::get('cuenta/{id}/retirar', [
+
+		'uses'	=>	'CuentasController@retirarse',
+		'as'	=>	'cuenta.retirar' 
+	]);
+
 	Route::resource('juridicas','JuridicasController');
 
 	Route::resource('cuentas_usuarios','Cuentas_UsuariosController');

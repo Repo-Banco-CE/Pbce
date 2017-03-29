@@ -10,3 +10,15 @@ ruta, no funciona con la URI.
 
 @extends('param')
 Los parámetros para los extends inician en la carpeta raiz views.
+
+
+
+Formato para realizar una compra con tarjeta de credito
+
+párametros:
+
+Cuenta Origen:
+Cuenta Destino:
+Cedula del Cliente:
+Password:
+Monto de Operación:

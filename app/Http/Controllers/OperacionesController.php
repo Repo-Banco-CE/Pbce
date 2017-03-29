@@ -3,90 +3,94 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Cuenta;
+use App\Natural;
+use App\Juridica;
+use Hash;
 
 class OperacionesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-        dd("Página principal del api");
+    
+
+   public function pagocontarjeta(Request $request){
+
+    if ($request->has('numero_tarjeta') && $request->has('token') &&  $request->has('monto') ) {
+        
+        $cuenta_origen= Cuenta::where('numero_tarjeta',$request->numero_tarjeta)->first();
+        $data_user= User::where('remember_token',$request->token)->first();
+        $cuenta_destino= Cuenta::where('id',$data_user->id)->first();
+
+        printf($cuenta_origen);
+        printf('<br><br>'.$data_user.'<br><br>');
+        printf('<br><br>'.$cuenta_destino.'<br><br>');
+
+        if ($data_user->afiliacion_comercial == 0 ) {
+            
+            $respuesta=  ["mensaje" => "Actualmente no se encuentra afiliado a este servicio.", "status" => "400" ];
+            return response()->json($respuesta,400);
+
+        }else{
+
+    
+            if ($cuenta_origen->cupo_disponible < $request->monto) {
+                
+                $respuesta=  ["mensaje" => "No se puede realizar la operacion saldo insuficiente", "status" => "400" ];
+                return response()->json($respuesta,400);       
+
+            }else{
+
+                $cuenta_origen->cupo_disponible= $cuenta_origen->cupo_disponible - $request->monto;
+                $cuenta_origen->saldo= $cuenta_origen->saldo - $request->monto;
+                $cuenta_origen->save();
+
+                $cuenta_destino->saldo_cuenta= $cuenta_destino->saldo_cuenta + $request->monto;
+                $cuenta_destino->save();
+
+                $respuesta=  ["mensaje" => "Operacion realizada con exito", "status" => "200" ];
+                return response()->json($respuesta,200);
+            }
+    
+            
+            }
+
+
+    }else{
+
+        $respuesta= [ "mensaje" => "Los paramatros suministrados no son validos", "status" => "400"];
+        return response()->json($respuesta,400);
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+   }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-        //
+
+   public function login( Request $request){
+
+    $email = $request->email;
+    $password = $request->password;
+
+    $query= User::where('email',$request->email)->first();
+    
+
+    if (count($query) > 0) {
+
        
-        return response()->json($request);
+        if (Hash::check($password, $query->password)){
+
+            return response()->json(['token' => $query->remember_token], 200);
+        
+        }else{
+
+            return response()->json(['status' => '401', 'mensaje' => 'Datos invalidos'], 401);
+        }
+    
+    }else{
+
+            return response()->json(['status' => '401', 'mensaje' => 'Datos invalidos'], 401);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-   
+   }
 
 
 }

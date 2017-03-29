@@ -14,4 +14,9 @@ class Cuenta extends Model
     {
         return $this->hasMany('App\Cuenta_Usuario');
     }
+
+    public function cuentas_movimientos()
+    {
+        return $this->hasMany('App\Cuenta_Movimiento');
+    }
 }

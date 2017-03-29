@@ -19,7 +19,7 @@ class RedirectIfAuthenticated
     {
         // REDIRECCIÓN CUANDO YA ESTOY LOGUEADO Y INTENTO LOGUEARME NUEVAMENTE
         if (Auth::guard($guard)->check()) {
-            return redirect()->route('admin.welcome');
+            return redirect()->route('users.index');
         }
 
         return $next($request);
