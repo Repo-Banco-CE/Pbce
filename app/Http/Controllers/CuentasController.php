@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Cuenta;
 use Session;
 use App\User;
+use App\Movimientos;
+use App\Cuenta_Movimiento;
+use Illuminate\Support\Facades\Auth;
 
 class CuentasController extends Controller
 {
@@ -104,8 +107,20 @@ class CuentasController extends Controller
     {
         //
         
-        $cuenta= Cuenta::find($id);
-        return view('admin.cuentas.show')->with('cuenta',$cuenta);
+        if (Auth::user()->id == $id) {
+        
+            $cuenta= Cuenta::find($id);
+            return view('admin.cuentas.show')->with('cuenta',$cuenta);
+
+        }else{
+
+            flash('No posee permisos para realizar esta operación.' ,'warning' );
+            $cuenta= Cuenta::find(Auth::user()->id);
+            return view('admin.cuentas.show')->with('cuenta',$cuenta);
+
+        }
+
+        
 
        
     }
@@ -201,24 +216,146 @@ class CuentasController extends Controller
 
     public function afiliar($id){
 
-        $user= User::find($id);
-        $user->afiliacion_comercial=1;
-        $user->save();
+        if (Auth::user()->id == $id) {
+        
+            $user= User::find($id);
+            $user->afiliacion_comercial=1;
+            $user->save();
 
-        flash('Su solicitud ha sido procesada exitosamente.' ,'success' );
-        $cuentas= Cuenta::all();
-        return view('admin.cuentas.index')->with('cuentas',$cuentas);
+            flash('Su solicitud ha sido procesada exitosamente.' ,'success' );
+            $cuentas= Cuenta::all();
+            return view('admin.cuentas.index')->with('cuentas',$cuentas);
+
+        }else{
+
+            flash('No posee permisos para realizar esta operación.' ,'warning' );
+            $cuentas= Cuenta::all();
+            return view('admin.cuentas.index')->with('cuentas',$cuentas);
+
+        }
+
+       
     }
 
     public function retirarse($id){
 
-        $user= User::find($id);
-        $user->afiliacion_comercial=0;
-        $user->save();
+        if (Auth::user()->id == $id) {
+        
+            $user= User::find($id);
+            $user->afiliacion_comercial=0;
+            $user->save();
 
-        flash('Su solicitud ha sido procesada exitosamente.' ,'success' );
-        $cuentas= Cuenta::all();
-        return view('admin.cuentas.index')->with('cuentas',$cuentas);
+            flash('Su solicitud ha sido procesada exitosamente.' ,'success' );
+            $cuentas= Cuenta::all();
+            return view('admin.cuentas.index')->with('cuentas',$cuentas);
+
+        }else{
+
+            flash('No posee permisos para realizar esta operación.' ,'warning' );
+            $cuentas= Cuenta::all();
+            return view('admin.cuentas.index')->with('cuentas',$cuentas);
+
+        }
+   
+    }
+
+    public function transferencia(Request $request){
+
+        $cuenta_origen=$request->cuenta_origen;
+        $cuenta_destino=$request->cuenta_destino;
+        $monto=$request->monto;
+        $tipo=$request->tipo;
+        $descripcion="Transferencia";
+        $origen="-";
+        $destino="+";
+        
+        if ($tipo == "local") {
+        //    printf('transferencia en el mismo banco <br>');
+            
+            $movimiento_origen= Cuenta::where("numero",$cuenta_origen)->first();
+            $movimiento_destino= Cuenta::where("numero",$cuenta_destino)->first();
+
+            if ($this->validar_saldo($movimiento_origen->numero,$monto)) {
+              
+              //  printf('hay plata');
+
+                /**
+                 * Actualización de datos en el emisor y creacion de movimientos del emisor
+                 */
+                
+                $movimiento_origen->saldo_cuenta= $movimiento_origen->saldo_cuenta - $monto;
+                $movimiento_origen->save();
+
+                $id_mov= $this->agregar_movimiento($origen,$monto,$movimiento_origen->saldo_cuenta,$descripcion);
+
+                $this->agregar_cuenta_movimiento($movimiento_origen->id, $id_mov);
+
+                /**
+                 * Actualización de datos en el receptor y creacion de movimientos del emisor
+                 */
+                
+                $movimiento_destino->saldo_cuenta= $movimiento_destino->saldo_cuenta + $monto;
+                $movimiento_destino->save();
+
+                $id_mov2= $this->agregar_movimiento($destino,$monto,$movimiento_destino->saldo_cuenta,$descripcion);
+
+                $this->agregar_cuenta_movimiento($movimiento_destino->id, $id_mov2);
+
+                flash('Operación realizada exitosamente' ,'success' );
+                $cuentas= Cuenta::all();
+                return view('admin.cuentas.index')->with('cuentas',$cuentas);
+
+            } else {
+                //printf('no hay plata')
+                flash('No posee saldo suficiente para realizar esta operación' ,'warning' );
+                $cuentas= Cuenta::all();
+                return view('admin.cuentas.transferencia')->with('cuentas',$cuentas);
+              
+            }
+            
+
+
+        }else{
+            printf('transferencia en un banco externo');
+        }
 
     }
+
+    public function agregar_movimiento($ruta, $monto, $saldo,$descripcion){
+
+        $mov= new Movimientos();
+        $mov->monto= $monto;
+        $mov->descripcion=$descripcion;
+        $mov->saldo=$saldo;
+        $mov->dc=$ruta;
+        $mov->save();
+
+        return $mov->id;
+
+    }
+
+    public function agregar_cuenta_movimiento($id_cuenta,$id_movimiento){
+
+        $cuentas_movimiento= new Cuenta_Movimiento();
+        $cuentas_movimiento->movimiento_id=$id_movimiento;
+        $cuentas_movimiento->cuenta_id=$id_cuenta;
+        $cuentas_movimiento->save();
+
+    }
+
+    public function validar_saldo($cuenta, $monto){
+
+        $data_cuenta= Cuenta::where("numero",$cuenta)->first();
+
+        if ($data_cuenta->saldo_cuenta > $monto) {
+            
+            return true;
+        } else {
+            return false;
+        }
+        
+
+    }
+
+
 }

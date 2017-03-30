@@ -36,10 +36,16 @@
         <li><a href="{{ route('cuentas.show', Auth::user()) }}">Consultar Tarjeta</a></li> 
         <li><a href="{{ route('cuenta.pagar-tarjeta') }}">Pagar Tarjeta</a></li>
       @endif   
-        <li><a href="#">Movimientos</a></li>
+        <li><a href="{{ route('cuenta.movimientos') }}">Movimientos</a></li>
         <li><a href="#">Facturas</a></li>
         <li><a href="#">Reportes</a></li>
-        <li><a href="#">Transferencia</a></li>
+        <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Transferencias<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{{ route("cuenta.transferencia")}}">Mismo Banco</a></li>
+              <li> <a href="#">Otros Bancos</a> </li>
+            </ul>
+        </li>
         
       </ul>
       

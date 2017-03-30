@@ -55,6 +55,25 @@ Route::group(['prefix' =>'admin', 'middleware' => 'auth'],function(){
 		'as'	=>	'cuenta.retirar' 
 	]);
 
+	Route::get('cuenta/movimientos', [
+
+		'uses'	=>	'MovimientosController@index',
+		'as'	=>	'cuenta.movimientos' 
+	]);
+
+	Route::get('cuenta/transferencia', ['as'	=>	'cuenta.transferencia' ,function(){
+
+		$cuentas= Cuenta::all();
+		return view('admin.cuentas.transferencia')->with('cuentas',$cuentas);
+	}]);
+
+	Route::post('cuenta/transferencia', [
+
+			'uses'	=>	'CuentasController@transferencia',
+			'as'	=>	'cuenta.posttransferencia' 
+
+			]);
+
 	Route::resource('juridicas','JuridicasController');
 
 	Route::resource('cuentas_usuarios','Cuentas_UsuariosController');
