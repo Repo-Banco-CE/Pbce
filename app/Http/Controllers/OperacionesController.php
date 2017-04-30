@@ -15,9 +15,10 @@ class OperacionesController extends Controller
 
    public function pagocontarjeta(Request $request){
 
-    if ($request->has('numero_tarjeta') && $request->has('token') &&  $request->has('monto') ) {
+    if ($request->has('numero_tarjeta') && $request->has('Titular') &&  $request->has('Titular_CI') &&  $request->has('FechaDeVencimiento') &&  $request->has('NumeroPedido')&&  $request->has('rif_comercio')&& $request->has('token') &&  $request->has('monto')) {
         
         $cuenta_origen= Cuenta::where('numero_tarjeta',$request->numero_tarjeta)->first();
+//        $cedula = Natural::where('Titular_CI',$request->cedula)->first();
         $data_user= User::where('remember_token',$request->token)->first();
         $cuenta_destino= Cuenta::where('id',$data_user->id)->first();
 
@@ -35,7 +36,7 @@ class OperacionesController extends Controller
     
             if ($cuenta_origen->cupo_disponible < $request->monto) {
                 
-                $respuesta=  ["mensaje" => "No se puede realizar la operacion saldo insuficiente", "status" => "400" ];
+                $respuesta=  ["mensaje" => "Credito insuficiente", "status" => "100" ];
                 return response()->json($respuesta,400);       
 
             }else{
@@ -47,7 +48,7 @@ class OperacionesController extends Controller
                 $cuenta_destino->saldo_cuenta= $cuenta_destino->saldo_cuenta + $request->monto;
                 $cuenta_destino->save();
 
-                $respuesta=  ["mensaje" => "Operacion realizada con exito", "status" => "200" ];
+                $respuesta=  ["mensaje" => "Transaccion Aprobada", "status" => "200" ];
                 return response()->json($respuesta,200);
             }
     
@@ -57,7 +58,7 @@ class OperacionesController extends Controller
 
     }else{
 
-        $respuesta= [ "mensaje" => "Los paramatros suministrados no son validos", "status" => "400"];
+        $respuesta= [ "mensaje" => "Datos inavlidos", "status" => "400"];
         return response()->json($respuesta,400);
 
     }
