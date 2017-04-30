@@ -71,23 +71,27 @@ class OperacionesController extends Controller
     $password = $request->password;
 
     $query= User::where('email',$request->email)->first();
-    
+
+        
 
     if (count($query) > 0) {
 
+        if ($query->afiliacion_comercial == 0) {
+            return response()->json(['error' => '403', 'mensaje' => 'Usted no posee afiliacion comercial'], 403);
+        }
        
         if (Hash::check($password, $query->password)){
 
-            return response()->json(['token' => $query->remember_token], 200);
+            return response()->json(['data' => '200', 'mensaje' => 'Se ha autenticado exitosamente','token' => $query->remember_token], 200);
         
         }else{
 
-            return response()->json(['status' => '401', 'mensaje' => 'Datos invalidos'], 401);
+            return response()->json(['error' => '401', 'mensaje' => 'Datos invalidos'], 401);
         }
     
     }else{
 
-            return response()->json(['status' => '401', 'mensaje' => 'Datos invalidos'], 401);
+            return response()->json(['error' => '401', 'mensaje' => 'Datos invalidos'], 401);
     }
 
    }
