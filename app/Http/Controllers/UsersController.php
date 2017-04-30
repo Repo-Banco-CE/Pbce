@@ -140,7 +140,8 @@ class UsersController extends Controller
         $cuenta->cupo_disponible=0;
         $cuenta->fecha_corte=0;
         $cuenta->numero_tarjeta=0;
-
+        $cuenta->fecha_vencimiento="05-2021";
+        
         $cuenta->save();
 
 //        printf('Numero de Cuenta <br>'.$cuenta->numero);
