@@ -192,7 +192,7 @@ class UsersController extends Controller
          */
         
         do {
-            $numero_tarjeta='22835023'.$parte1.''.$parte2;
+            $numero_tarjeta='45400323'.$parte1.''.$parte2;
 
         } while (count(Cuenta::where('numero',$numero_tarjeta)->first()) > 0);
 
@@ -202,8 +202,9 @@ class UsersController extends Controller
         $cuenta->limite=100000;
         $cuenta->saldo=100000;
         $cuenta->cupo_disponible=100000;
-        $cuenta->fecha_corte="2017-5-10";
+        $cuenta->fecha_corte="2017-7-10";
         $cuenta->numero_tarjeta=$numero_tarjeta;
+        $cuenta->fecha_vencimiento="05-2021";
 
         $cuenta->save();
 
