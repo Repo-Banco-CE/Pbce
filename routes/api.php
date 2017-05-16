@@ -13,12 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');
+Route::get('/user', [
+    'uses'	=>	'OperacionesController@consulta_http',
+    'as'	=>	'consulta_http'
+]);
 
 
-
+Route::get('/prueba', function() {
+    return "result http";
+});
 
 
 

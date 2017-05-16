@@ -140,7 +140,7 @@ class UsersController extends Controller
         $cuenta->cupo_disponible=0;
         $cuenta->fecha_corte=0;
         $cuenta->numero_tarjeta=0;
-        $cuenta->fecha_vencimiento="05-2021";
+        $cuenta->fecha_vencimiento="05-21";
         
         $cuenta->save();
 
@@ -205,7 +205,7 @@ class UsersController extends Controller
         $cuenta->cupo_disponible=100000;
         $cuenta->fecha_corte="2017-7-10";
         $cuenta->numero_tarjeta=$numero_tarjeta;
-        $cuenta->fecha_vencimiento="05-2021";
+        $cuenta->fecha_vencimiento="05-21";
 
         $cuenta->save();
 
