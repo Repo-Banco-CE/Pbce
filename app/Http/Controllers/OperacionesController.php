@@ -36,6 +36,15 @@ class OperacionesController extends Controller
                $vencimiento = $request->get('FechaDeVencimiento');
                $rif = $request->get('rif_comercio');
 
+               $consultarif=Juridica::where('rif', $rif)->first();
+
+               if(empty($consultarif)){
+
+                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
+                   return response()->json($respuesta, 400);
+
+               }
+
                $datos_cuenta = Cuenta::where('numero_tarjeta', $request->numero_tarjeta)->first();
 
                if (!empty($datos_cuenta)) {
