@@ -17,10 +17,10 @@ class AddCuentas extends Migration
             $table->increments('id');
             $table->string('numero');
             $table->string('tipo');
-            $table->float('saldo_cuenta');
-            $table->float('limite');
-            $table->float('saldo');
-            $table->float('cupo_disponible');
+            $table->double('saldo_cuenta');
+            $table->double('limite');
+            $table->double('saldo');
+            $table->double('cupo_disponible');
             $table->string('fecha_corte');
  //           $table->integer('id_cuenta_usuario')->unsigned();
             $table->timestamps();

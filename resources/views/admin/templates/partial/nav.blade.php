@@ -37,8 +37,29 @@
         <li><a href="{{ route('cuenta.pagar-tarjeta') }}">Pagar Tarjeta</a></li>
       @endif   
         <li><a href="{{ route('cuenta.movimientos') }}">Movimientos</a></li>
-        <li><a href="#">Facturas</a></li>
-        <li><a href="#">Reportes</a></li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            Facturas por Cobrar <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ route('facturas.activas')}}" >Activas</a></li>
+            <li><a href="{{ route('facturas.vencidas')}}" >Vencidas</a></li>
+            <li><a href="{{ route('facturas.pagadas')}}" >Pagadas</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            Facturas por Pagar <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ route('pagarfacturas.activas')}}" >Activas</a></li>
+            <li><a href="{{ route('pagarfacturas.vencidas')}}" >Vencidas</a></li>
+            <li><a href="{{ route('pagarfacturas.pagadas')}}" >Pagadas</a></li>
+          </ul>
+        </li>
+
         <li>
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Transferencias<span class="caret"></span></a>
             <ul class="dropdown-menu">
