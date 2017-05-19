@@ -7,12 +7,38 @@ use App\User;
 use App\Cuenta;
 use App\Natural;
 use App\Juridica;
+use App\Movimientos;
+use App\Cuenta_Movimiento;
 use Hash;
 use GuzzleHttp\Client;
 
+
 class OperacionesController extends Controller
 {
-    
+
+
+
+    public function agregar_movimiento($ruta, $monto, $saldo,$descripcion){
+
+        $mov= new Movimientos();
+        $mov->monto= $monto;
+        $mov->descripcion=$descripcion;
+        $mov->saldo=$saldo;
+        $mov->dc=$ruta;
+        $mov->save();
+
+        return $mov->id;
+
+    }
+
+    public function agregar_cuenta_movimiento($id_cuenta,$id_movimiento){
+
+        $cuentas_movimiento= new Cuenta_Movimiento();
+        $cuentas_movimiento->movimiento_id=$id_movimiento;
+        $cuentas_movimiento->cuenta_id=$id_cuenta;
+        $cuentas_movimiento->save();
+
+    }
 
 /****************************************************************
                         Pago con Tarjeta
@@ -25,7 +51,7 @@ class OperacionesController extends Controller
 
            $numero_tarjeta = $request->get('numero_tarjeta');
            $banco_id = substr($numero_tarjeta, 4, 2);
-           print_r('banco id '.$banco_id);
+           //print_r('banco id '.$banco_id);
 
 
            if ($banco_id == '03') // identificacion del banco
@@ -35,6 +61,24 @@ class OperacionesController extends Controller
                $ci = $request->get('Titular_CI');
                $vencimiento = $request->get('FechaDeVencimiento');
                $rif = $request->get('rif_comercio');
+
+
+               $consultarif=Juridica::where('rif', $rif)->first();
+               if(empty($consultarif)){
+
+                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
+                   return response()->json($respuesta, 400);
+
+               }
+
+
+
+               if(empty($consultarif)){
+
+                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
+                   return response()->json($respuesta, 400);
+
+               }
 
                $datos_cuenta = Cuenta::where('numero_tarjeta', $request->numero_tarjeta)->first();
 
@@ -65,15 +109,15 @@ class OperacionesController extends Controller
                    }
 
                } else {
-                   $respuesta = ["mensaje" => "Tarjeta invalida aaa", "status" => "400"];
+                   $respuesta = ["mensaje" => "Tarjeta invalida", "status" => "400"];
                    return response()->json($respuesta, 400);
 
                }
 
 
-               $data_user = User::where('remember_token', $request->token)->first();
+              $data_user = User::where('remember_token', $request->token)->first();
                $cuenta_destino = Cuenta::where('id', $data_user->id)->first();
-
+               // $cuenta_destino= $numero_cuenta_destino;
 
 
                if ($data_user->afiliacion_comercial == 0) {
@@ -90,13 +134,23 @@ class OperacionesController extends Controller
                        return response()->json($respuesta, 400);
 
                    } else {
-
+                       $descripcion='Pago con tarjeta';
+                       $origen="-";
                        $cuenta_origen->cupo_disponible = $cuenta_origen->cupo_disponible - $request->monto;
                        $cuenta_origen->saldo = $cuenta_origen->saldo - $request->monto;
                        $cuenta_origen->save();
+                       $id_mov= $this->agregar_movimiento($origen,$request->monto,$cuenta_origen->saldo_cuenta,$descripcion);
+                       $this->agregar_cuenta_movimiento($cuenta_origen->id, $id_mov);
 
+
+                       $destino="+";
                        $cuenta_destino->saldo_cuenta = $cuenta_destino->saldo_cuenta + $request->monto;
                        $cuenta_destino->save();
+                       $id_mov2= $this->agregar_movimiento($destino,$request->monto,$cuenta_destino->saldo_cuenta,$descripcion);
+                      $this->agregar_cuenta_movimiento($cuenta_destino->id, $id_mov2);
+
+
+
 
                        $respuesta = ["mensaje" => "Transaccion Aprobada", "status" => "200"];
                        return response()->json($respuesta, 200);
@@ -114,6 +168,12 @@ class OperacionesController extends Controller
        }
 
    }
+
+
+
+
+
+
 
 
 
