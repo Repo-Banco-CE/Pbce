@@ -71,15 +71,16 @@ class UsersController extends Controller
         $user->remember_token= $token;      
         $user->save();
 
-        /******************************
-         * Agrega juridico a la tabla *
-         ******************************/
 
         $user2 = User::where('email',$user->email)->first();
 
         if ($request->tipo_usuario == 'juridico') {
         
-        $rif='V-'.$request->rif;
+        /****************************************
+         * Agrega juridico a la tabla  juridico *
+         ****************************************/
+
+        $rif='J'.$request->rif;
         $id= $user2->id;
 
         $juridico= new Juridica();
@@ -88,6 +89,10 @@ class UsersController extends Controller
         $juridico->save();
 
         }else{
+
+        /*************************************
+         * Agrega natural a la tabla natural *
+         *************************************/
 
         $cedula=$request->cedula;
         $id= $user2->id;
@@ -102,11 +107,13 @@ class UsersController extends Controller
 
        
        
-        /****************************
-         * Agrega cuenta a la tabla *
-         ****************************/
+        
 
         if ($request->tipo_usuario == 'juridico') {
+
+        /************************************************
+         * Agrega cuenta de usuario juridico a la tabla *
+         ***********************************************/
 
         $cuenta= new Cuenta();
 /*
@@ -134,23 +141,19 @@ class UsersController extends Controller
 
         $cuenta->numero=$numero_cuenta;
         $cuenta->tipo='Corriente';
-        $cuenta->saldo_cuenta=1000000;
+        $cuenta->saldo_cuenta=10000000;
         $cuenta->limite=0;
         $cuenta->saldo=0;
         $cuenta->cupo_disponible=0;
         $cuenta->fecha_corte=0;
         $cuenta->numero_tarjeta=0;
-        $cuenta->fecha_vencimiento="05-21";
+        $cuenta->fecha_vencimiento="";
         
         $cuenta->save();
 
 //        printf('Numero de Cuenta <br>'.$cuenta->numero);
      
         $query=Cuenta::where('numero',$numero_cuenta)->first();
-
-        /**************************************
-         * Agrega Cuentas_Usuarios a la tabla *
-         **************************************/
 
         $cuentas= new Cuenta_Usuario();   
         $cuentas->user_id=$id;
@@ -163,6 +166,10 @@ class UsersController extends Controller
         return redirect()->route('admin.auth.login-juridico');
 
         }else{
+
+        /************************************************
+         * Agrega cuenta de usuario natural a la tabla  *
+         ***********************************************/
 
         $cuenta= new Cuenta();
 /*
@@ -203,7 +210,7 @@ class UsersController extends Controller
         $cuenta->limite=100000;
         $cuenta->saldo=100000;
         $cuenta->cupo_disponible=100000;
-        $cuenta->fecha_corte="2017-7-10";
+        $cuenta->fecha_corte="10-7-2017";
         $cuenta->numero_tarjeta=$numero_tarjeta;
         $cuenta->fecha_vencimiento="05-21";
 
@@ -212,10 +219,6 @@ class UsersController extends Controller
 //        printf('Numero de Cuenta <br>'.$cuenta->numero);
      
         $query=Cuenta::where('numero',$numero_cuenta)->first();
-
-        /**************************************
-         * Agrega Cuentas_Usuarios a la tabla *
-         **************************************/
 
         $cuentas= new Cuenta_Usuario();   
         $cuentas->user_id=$id;

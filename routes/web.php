@@ -78,6 +78,55 @@ Route::group(['prefix' =>'admin', 'middleware' => 'auth'],function(){
 
 	Route::resource('cuentas_usuarios','Cuentas_UsuariosController');
 
+########################################################################################
+#						Información de Facturas por Cobrar 							   #
+########################################################################################
+#
+	Route::get('/facturas/activas',[
+
+	'uses'	=>	'FacturasController@facturas_activas',
+	'as'	=>	'facturas.activas'
+	]);
+
+	Route::get('/facturas/pagadas',[
+
+	'uses'	=>	'FacturasController@facturas_pagadas',
+	'as'	=>	'facturas.pagadas'
+	]);
+
+	Route::get('/facturas/vencidas',[
+
+	'uses'	=>	'FacturasController@facturas_vencidas',
+	'as'	=>	'facturas.vencidas'
+	]);
+
+########################################################################################
+#						Información de Facturas por Pagar 							   #
+########################################################################################
+	Route::get('/pagarfacturas/activas',[
+
+	'uses'	=>	'FacturasController@pagarfacturas_activas',
+	'as'	=>	'pagarfacturas.activas'
+	]);
+
+	Route::get('/pagarfacturas/pagadas',[
+
+	'uses'	=>	'FacturasController@pagarfacturas_pagadas',
+	'as'	=>	'pagarfacturas.pagadas'
+	]);
+
+	Route::get('/pagarfacturas/vencidas',[
+
+	'uses'	=>	'FacturasController@pagarfacturas_vencidas',
+	'as'	=>	'pagarfacturas.vencidas'
+	]);
+
+	Route::get('factura/{id}/pagar', [
+
+		'uses'	=>	'FacturasController@pagarfactura',
+		'as'	=>	'pagar.factura' 
+	]);
+
 });
 
 //EL FORMATO DEL 'as' TIENE LA RUTA DEL ARCHIVO QUE SE VA A EJECUTAR

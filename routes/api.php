@@ -39,3 +39,8 @@ Route::post('/login', [
 	'as'	=> 'api-login'
 	]);
 
+Route::post('/enviarfactura',[
+
+	'uses'	=>	'FacturasController@factura_create',
+	'as'	=>	'factura.create'
+	]);

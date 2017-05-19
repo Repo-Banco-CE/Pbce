@@ -19,4 +19,9 @@ class Cuenta extends Model
     {
         return $this->hasMany('App\Cuenta_Movimiento');
     }
+
+    public function facturas_users()
+    {
+        return $this->hasMany('App\Factura_Usuario');
+    }
 }
