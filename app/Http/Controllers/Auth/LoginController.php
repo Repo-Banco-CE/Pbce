@@ -73,8 +73,16 @@ class LoginController extends Controller
               return redirect()->intended('/admin/users');
               
         }else{
-            flash('El correo o la contraseña no coinciden.', 'danger');
-            return view('admin.auth.login');
+            
+              if ($request->tipo_usuario == 'natural') {
+                flash('Este usuario no se encuentra registrado.', 'danger');
+                return view('admin.auth.login');
+              }else{
+                flash('Este usuario no se encuentra registrado.', 'danger');
+                return view('admin.auth.login-juridico');
+              }
+
+
         }
 
     }else{

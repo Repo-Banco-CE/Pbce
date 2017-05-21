@@ -24,7 +24,7 @@
 					<th>Limite</th>
 					<th>Saldo</th>
 					<th>Cupo Disponible</th>
-					<th>Fecha de Corte</th>
+					<th>Fecha de Vencimiento</th>
 				</tr>
 			</thead>
 			<tbody>						
@@ -33,7 +33,7 @@
 							<td>{{ $cuenta->limite }}</td>
 							<td>{{ $cuenta->saldo }}</td>
 							<td>{{ $cuenta->cupo_disponible }}</td>
-							<td>{{ $cuenta->fecha_corte }}</td>
+							<td>{{ $cuenta->fecha_vencimiento }}</td>
 						</tr>
 
 				

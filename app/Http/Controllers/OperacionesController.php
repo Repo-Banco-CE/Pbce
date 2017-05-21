@@ -85,7 +85,8 @@ class OperacionesController extends Controller
                if (!empty($datos_cuenta)) {
 
                    if ($datos_cuenta->fecha_vencimiento == $vencimiento) {
-                       $cedula = Natural::where('cedula', $ci)->where('id', $datos_cuenta->id)->first();
+                       //$cedula = Natural::where('cedula', $ci)->where('id', $datos_cuenta->id)->first();
+                       $cedula = Natural::where('cedula', $ci)->first();
 
                        if (!empty($cedula)) {
 
@@ -168,12 +169,6 @@ class OperacionesController extends Controller
        }
 
    }
-
-
-
-
-
-
 
 
 

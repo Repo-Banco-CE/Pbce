@@ -38,6 +38,7 @@
       @endif   
         <li><a href="{{ route('cuenta.movimientos') }}">Movimientos</a></li>
 
+      @if(Auth::user()->tipo == 'juridico')
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             Facturas por Cobrar <span class="caret"></span>
@@ -59,7 +60,7 @@
             <li><a href="{{ route('pagarfacturas.pagadas')}}" >Pagadas</a></li>
           </ul>
         </li>
-
+      @endif
         <li>
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Transferencias<span class="caret"></span></a>
             <ul class="dropdown-menu">
