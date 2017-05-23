@@ -275,6 +275,14 @@ class CuentasController extends Controller
             $movimiento_origen= Cuenta::where("numero",$cuenta_origen)->first();
             $movimiento_destino= Cuenta::where("numero",$cuenta_destino)->first();
 
+            if (empty($movimiento_destino)) {
+                # code...
+                flash('Los datos de la cuenta destino no son válidos.' ,'warning' );
+                $cuentas= Cuenta::all();
+                return view('admin.cuentas.transferencia')->with('cuentas',$cuentas);
+            }
+
+
             if ($this->validar_saldo($movimiento_origen->numero,$monto)) {
               
               //  printf('hay plata');
