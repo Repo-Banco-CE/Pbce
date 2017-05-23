@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Http\Requests\LoginRequest;
 
+
 class LoginController extends Controller
 {
     /*

@@ -47,16 +47,16 @@ class OperacionesController extends Controller
 
    public function pagocontarjeta(Request $request){
 
-     if ($request->has('numero_tarjeta') && $request->has('Titular') && $request->has('Titular_CI') && $request->has('FechaDeVencimiento') && $request->has('NumeroPedido') && $request->has('rif_comercio') && $request->has('token') && $request->has('monto')) {
+     if ($request->has('NumeroDeTarjeta') && $request->has('Titular') && $request->has('Titular_CI') && $request->has('FechaDeVencimiento') && $request->has('NumeroPedido') && $request->has('rif_comercio') && $request->has('token') && $request->has('Monto')) {
 
-           $numero_tarjeta = $request->get('numero_tarjeta');
+           $numero_tarjeta = $request->get('NumeroDeTarjeta');
            $banco_id = substr($numero_tarjeta, 4, 2);
            //print_r('banco id '.$banco_id);
 
 
            if ($banco_id == '03') // identificacion del banco
            {
-               $cuenta_origen = Cuenta::where('numero_tarjeta', $request->numero_tarjeta)->first();
+               $cuenta_origen = Cuenta::where('numero_tarjeta', $request->NumeroDeTarjeta)->first();
                $titular = $request->get('Titular');
                $ci = $request->get('Titular_CI');
                $vencimiento = $request->get('FechaDeVencimiento');
@@ -71,8 +71,6 @@ class OperacionesController extends Controller
 
                }
 
-
-
                if(empty($consultarif)){
 
                    $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
@@ -80,7 +78,7 @@ class OperacionesController extends Controller
 
                }
 
-               $datos_cuenta = Cuenta::where('numero_tarjeta', $request->numero_tarjeta)->first();
+               $datos_cuenta = Cuenta::where('numero_tarjeta', $request->NumeroDeTarjeta)->first();
 
                if (!empty($datos_cuenta)) {
 
@@ -129,7 +127,7 @@ class OperacionesController extends Controller
                } else {
 
 
-                   if ($cuenta_origen->cupo_disponible < $request->monto) {
+                   if ($cuenta_origen->cupo_disponible < $request->Monto) {
 
                        $respuesta = ["mensaje" => "Credito insuficiente", "status" => "100"];
                        return response()->json($respuesta, 400);
@@ -137,17 +135,17 @@ class OperacionesController extends Controller
                    } else {
                        $descripcion='Pago con tarjeta';
                        $origen="-";
-                       $cuenta_origen->cupo_disponible = $cuenta_origen->cupo_disponible - $request->monto;
-                       $cuenta_origen->saldo = $cuenta_origen->saldo - $request->monto;
+                       $cuenta_origen->cupo_disponible = $cuenta_origen->cupo_disponible - $request->Monto;
+                       $cuenta_origen->saldo = $cuenta_origen->saldo - $request->Monto;
                        $cuenta_origen->save();
-                       $id_mov= $this->agregar_movimiento($origen,$request->monto,$cuenta_origen->saldo_cuenta,$descripcion);
+                       $id_mov= $this->agregar_movimiento($origen,$request->Monto,$cuenta_origen->saldo_cuenta,$descripcion);
                        $this->agregar_cuenta_movimiento($cuenta_origen->id, $id_mov);
 
 
                        $destino="+";
-                       $cuenta_destino->saldo_cuenta = $cuenta_destino->saldo_cuenta + $request->monto;
+                       $cuenta_destino->saldo_cuenta = $cuenta_destino->saldo_cuenta + $request->Monto;
                        $cuenta_destino->save();
-                       $id_mov2= $this->agregar_movimiento($destino,$request->monto,$cuenta_destino->saldo_cuenta,$descripcion);
+                       $id_mov2= $this->agregar_movimiento($destino,$request->Monto,$cuenta_destino->saldo_cuenta,$descripcion);
                       $this->agregar_cuenta_movimiento($cuenta_destino->id, $id_mov2);
 
 

@@ -27,6 +27,7 @@ Route::get('/prueba', function() {
 
 Route::post('/pagocontarjeta',[
 
+	'middleware' => ['api', 'cors'],
 	'uses'	=>	'OperacionesController@pagocontarjeta',
 	'as'	=>	'operaciones.pagocontarjeta'
 
@@ -35,12 +36,14 @@ Route::post('/pagocontarjeta',[
 
 Route::post('/login', [
 
+	'middleware' => ['api', 'cors'],
 	'uses'	=> 'OperacionesController@login',
 	'as'	=> 'api-login'
 	]);
 
 Route::post('/enviarfactura',[
 
+	'middleware' => ['api', 'cors'],
 	'uses'	=>	'FacturasController@factura_create',
 	'as'	=>	'factura.create'
 	]);
