@@ -165,7 +165,7 @@ class OperacionesController extends Controller
                if($banco_id != '01' and $banco_id != '02' ){
 
                    //print_r('ninguno ');
-                   $respuesta = ["mensaje" => "Datos invalidos otro bancoAAA", "status" => "400"];
+                   $respuesta = ["mensaje" => "Datos invalidos banco no existe", "status" => "400"];
                   return response()->json($respuesta, 400);
 
                }
