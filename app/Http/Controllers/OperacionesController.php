@@ -66,14 +66,14 @@ class OperacionesController extends Controller
                $consultarif=Juridica::where('rif', $rif)->first();
                if(empty($consultarif)){
 
-                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
+                   $respuesta = ["mensaje" => "Comercio no existe", "error" => "400"];
                    return response()->json($respuesta, 400);
 
                }
 
                if(empty($consultarif)){
 
-                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
+                   $respuesta = ["mensaje" => "Comercio no existe", "error" => "400"];
                    return response()->json($respuesta, 400);
 
                }
@@ -92,23 +92,23 @@ class OperacionesController extends Controller
 
                            if (empty($nombre)) {
 
-                               $respuesta = ["mensaje" => "Datos invalidos", "status" => "400"];
+                               $respuesta = ["mensaje" => "Datos invalidos", "error" => "400"];
                                return response()->json($respuesta, 400);
                            }
 
                        } else {
 
-                           $respuesta = ["mensaje" => "Datos invalidos cedula", "status" => "400"];
+                           $respuesta = ["mensaje" => "Datos invalidos cedula", "error" => "400"];
                            return response()->json($respuesta, 400);
                        }
                    } else {
 
-                       $respuesta = ["mensaje" => "Tarjeta vencida ", "status" => "400"];
+                       $respuesta = ["mensaje" => "Tarjeta vencida ", "error" => "400"];
                        return response()->json($respuesta, 400);
                    }
 
                } else {
-                   $respuesta = ["mensaje" => "Tarjeta invalida", "status" => "400"];
+                   $respuesta = ["mensaje" => "Tarjeta invalida", "error" => "400"];
                    return response()->json($respuesta, 400);
 
                }
@@ -121,7 +121,7 @@ class OperacionesController extends Controller
 
                if ($data_user->afiliacion_comercial == 0) {
 
-                   $respuesta = ["mensaje" => "Actualmente no se encuentra afiliado a este servicio.", "status" => "400"];
+                   $respuesta = ["mensaje" => "Actualmente no se encuentra afiliado a este servicio.", "error" => "400"];
                    return response()->json($respuesta, 400);
 
                } else {
@@ -129,7 +129,7 @@ class OperacionesController extends Controller
 
                    if ($cuenta_origen->cupo_disponible < $request->Monto) {
 
-                       $respuesta = ["mensaje" => "Credito insuficiente", "status" => "100"];
+                       $respuesta = ["mensaje" => "Credito insuficiente", "error" => "100"];
                        return response()->json($respuesta, 400);
 
                    } else {
@@ -151,7 +151,7 @@ class OperacionesController extends Controller
 
 
 
-                       $respuesta = ["mensaje" => "Transaccion Aprobada", "status" => "200"];
+                       $respuesta = ["mensaje" => "Transaccion Aprobada", "data" => "200"];
                        return response()->json($respuesta, 200);
                    }
 
@@ -165,7 +165,7 @@ class OperacionesController extends Controller
                if($banco_id != '01' and $banco_id != '02' ){
 
                    //print_r('ninguno ');
-                   $respuesta = ["mensaje" => "Datos invalidos banco no existe", "status" => "400"];
+                   $respuesta = ["mensaje" => "Datos invalidos banco no existe", "error" => "400"];
                   return response()->json($respuesta, 400);
 
                }
