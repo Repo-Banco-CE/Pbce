@@ -174,30 +174,53 @@ class OperacionesController extends Controller
                if ($banco_id == '01') // Banco NJG
                {
                    //print_r('juan ');
-                   $client = new Client([
-                       'base_uri' => 'https://njg.herokuapp.com/users/pagar',
-                       'timeout'  => 2.0,
-                   ]);
+                  $client = new Client([
+                                        'timeout'  => 2.0
+                                        ]);
 
-                   $response = $client->request('POST', $request);
+                  $Data = [
+                  "NumeroDeTarjeta" => $request->NumeroDeTarjeta,
+                  "Titular" => $request->Titular,
+                  "Titular_CI" => $request->Titular_CI,
+                  "FechaDeVencimiento" => $request->FechaDeVencimiento,
+                  "NumeroPedido" => $request->NumeroPedido,
+                  "rif_comercio" => $request->rif_comercio,
+                  "rif_comercio" => $request->rif_comercio,
+                  "Monto" => $request->Monto,
+                  "Monto" => $request->Monto,
+                  "token" => $request->token
+                  ];
 
-                   return json_decode($response->getBody()->getContents());
+                   $response = $client->post('https://njg.herokuapp.com/users/pagar', ['form_params' => $Data]);
+                   return json_decode($response->getBody()->getContents(),200);
+
+
+                
 
                }
 
               if ($banco_id == '02') // Banco Unibank
               {
-                  print_r('francisco ');
+                  //print_r('francisco ');
                    $client = new Client([
-                       // Base URI is used with relative requests
-                       'base_uri' => 'https://apiunibank.herokuapp.com/usuarios/tarjeta-credito/pago',
-                       // You can set any number of default request options.
-                       'timeout'  => 2.0,
-                   ]);
+                                        'timeout'  => 2.0
+                                        ]);
 
-                   $response = $client->request('GET', 'prueba');
+                  $Data = [
+                  "NumeroDeTarjeta" => $request->NumeroDeTarjeta,
+                  "Titular" => $request->Titular,
+                  "Titular_CI" => $request->Titular_CI,
+                  "FechaDeVencimiento" => $request->FechaDeVencimiento,
+                  "NumeroPedido" => $request->NumeroPedido,
+                  "rif_comercio" => $request->rif_comercio,
+                  "rif_comercio" => $request->rif_comercio,
+                  "Monto" => $request->Monto,
+                  "Monto" => $request->Monto,
+                  "token" => $request->token
+                  ];
 
-                   return json_decode($response->getBody()->getContents());
+                   $response = $client->post('https://apiunibank.herokuapp.com/usuarios/tarjetas-credito/pago', ['form_params' => $Data]);
+                   return json_decode($response->getBody()->getContents(),200);
                }
 
 
