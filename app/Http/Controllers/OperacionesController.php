@@ -159,8 +159,47 @@ class OperacionesController extends Controller
 
            }else{ // otro banco
            
-               $respuesta = ["mensaje" => "Datos invalidos otro banco", "status" => "400"];
-               return response()->json($respuesta, 400);
+
+
+
+               if($banco_id != '01' and $banco_id != '02' ){
+
+                   //print_r('ninguno ');
+                   $respuesta = ["mensaje" => "Datos invalidos otro bancoAAA", "status" => "400"];
+                  return response()->json($respuesta, 400);
+
+               }
+
+
+               if ($banco_id == '01') // Banco NJG
+               {
+                   //print_r('juan ');
+                   $client = new Client([
+                       'base_uri' => 'https://njg.herokuapp.com/users/pagar',
+                       'timeout'  => 2.0,
+                   ]);
+
+                   $response = $client->request('POST', $request);
+
+                   return json_decode($response->getBody()->getContents());
+
+               }
+
+              if ($banco_id == '02') // Banco Unibank
+              {
+                  print_r('francisco ');
+                   $client = new Client([
+                       // Base URI is used with relative requests
+                       'base_uri' => 'https://apiunibank.herokuapp.com/usuarios/tarjeta-credito/pago',
+                       // You can set any number of default request options.
+                       'timeout'  => 2.0,
+                   ]);
+
+                   $response = $client->request('GET', 'prueba');
+
+                   return json_decode($response->getBody()->getContents());
+               }
+
 
        }
 
