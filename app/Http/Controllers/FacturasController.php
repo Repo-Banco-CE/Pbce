@@ -114,7 +114,7 @@ class FacturasController extends Controller
                                 $facturas_users->save();
                             
                                 $respuesta= ['data' => '200' , 'mensaje' => 'La Factura fue enviada exitosamente.' ];
-                                return response()->json($respuesta,400);
+                                return response()->json($respuesta,200);
 
                             }else{
 
