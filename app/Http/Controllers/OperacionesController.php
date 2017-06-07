@@ -47,9 +47,22 @@ class OperacionesController extends Controller
 
    public function pagocontarjeta(Request $request){
 
-     if ($request->has('NumeroDeTarjeta') && $request->has('Titular') && $request->has('Titular_CI') && $request->has('FechaDeVencimiento') && $request->has('NumeroPedido') && $request->has('rif_comercio') && $request->has('token') && $request->has('Monto')) {
+
+     if ($request->has('NumeroDeTarjeta') && $request->has('Titular') && $request->has('Titular_CI') && $request->has('FechaDeVencimiento') && $request->has('NumeroPedido') && $request->has('rif_comercio') && $request->has('token') && $request->has('Monto'))
+     {
+
+
 
            $numero_tarjeta = $request->get('NumeroDeTarjeta');
+
+           if(strlen($numero_tarjeta)<16){
+
+               $respuesta = ["mensaje" => "Tarjeta invalida", "status" => "400"];
+               return response()->json($respuesta, 400);
+
+           }
+
+
            $banco_id = substr($numero_tarjeta, 4, 2);
            //print_r('banco id '.$banco_id);
 
@@ -61,15 +74,10 @@ class OperacionesController extends Controller
                $ci = $request->get('Titular_CI');
                $vencimiento = $request->get('FechaDeVencimiento');
                $rif = $request->get('rif_comercio');
+               $token= $request->get('token');
 
 
                $consultarif=Juridica::where('rif', $rif)->first();
-               if(empty($consultarif)){
-
-                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
-                   return response()->json($respuesta, 400);
-
-               }
 
                if(empty($consultarif)){
 
@@ -77,6 +85,14 @@ class OperacionesController extends Controller
                    return response()->json($respuesta, 400);
 
                }
+
+//
+//               if(empty($consultarif)){
+//
+//                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
+//                   return response()->json($respuesta, 400);
+//
+//               }
 
                $datos_cuenta = Cuenta::where('numero_tarjeta', $request->NumeroDeTarjeta)->first();
 
@@ -92,7 +108,7 @@ class OperacionesController extends Controller
 
                            if (empty($nombre)) {
 
-                               $respuesta = ["mensaje" => "Datos invalidos", "status" => "400"];
+                               $respuesta = ["mensaje" => "Datos invalidos nombre", "status" => "400"];
                                return response()->json($respuesta, 400);
                            }
 
@@ -114,9 +130,27 @@ class OperacionesController extends Controller
                }
 
 
-              $data_user = User::where('remember_token', $request->token)->first();
+              $data_user = User::where('remember_token', $token)->first();
+              // print_r($data_user->remember_token);
                $cuenta_destino = Cuenta::where('id', $data_user->id)->first();
-               // $cuenta_destino= $numero_cuenta_destino;
+
+
+               if(empty( $data_user->remember_token)){
+
+                   $respuesta = ["mensaje" => "Token invalido ", "status" => "400"];
+                   return response()->json($respuesta, 400);
+
+               }
+
+
+               $token_rif=Juridica::where('user_id', $data_user->id)->first(); //comprobar que el token coincida con el rif del comercio
+
+
+               if($token_rif-> rif != $rif){
+                   $respuesta = ["mensaje" => "Datos invalidos token y rif no coinciden ", "status" => "400"];
+                   return response()->json($respuesta, 400);
+
+               }
 
 
                if ($data_user->afiliacion_comercial == 0) {
@@ -195,7 +229,7 @@ class OperacionesController extends Controller
                        'timeout'  => 2.0,
                    ]);
 
-                   $response = $client->request('GET', 'prueba');
+                   $response = $client->request('POST', 'prueba');
 
                    return json_decode($response->getBody()->getContents());
                }
@@ -203,6 +237,11 @@ class OperacionesController extends Controller
 
        }
 
+       }
+       else{ // bad request
+
+           $respuesta = ["mensaje" => "Datos invalidos", "status" => "400"];
+           return response()->json($respuesta, 400);
        }
 
    }
