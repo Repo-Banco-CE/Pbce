@@ -47,22 +47,9 @@ class OperacionesController extends Controller
 
    public function pagocontarjeta(Request $request){
 
-
-     if ($request->has('NumeroDeTarjeta') && $request->has('Titular') && $request->has('Titular_CI') && $request->has('FechaDeVencimiento') && $request->has('NumeroPedido') && $request->has('rif_comercio') && $request->has('token') && $request->has('Monto'))
-     {
-
-
+     if ($request->has('NumeroDeTarjeta') && $request->has('Titular') && $request->has('Titular_CI') && $request->has('FechaDeVencimiento') && $request->has('NumeroPedido') && $request->has('rif_comercio') && $request->has('token') && $request->has('Monto')) {
 
            $numero_tarjeta = $request->get('NumeroDeTarjeta');
-
-           if(strlen($numero_tarjeta)<16){
-
-               $respuesta = ["mensaje" => "Tarjeta invalida", "status" => "400"];
-               return response()->json($respuesta, 400);
-
-           }
-
-
            $banco_id = substr($numero_tarjeta, 4, 2);
            //print_r('banco id '.$banco_id);
 
@@ -74,25 +61,22 @@ class OperacionesController extends Controller
                $ci = $request->get('Titular_CI');
                $vencimiento = $request->get('FechaDeVencimiento');
                $rif = $request->get('rif_comercio');
-               $token= $request->get('token');
 
 
                $consultarif=Juridica::where('rif', $rif)->first();
-
                if(empty($consultarif)){
 
-                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
+                   $respuesta = ["mensaje" => "Comercio no existe", "error" => "400"];
                    return response()->json($respuesta, 400);
 
                }
 
-//
-//               if(empty($consultarif)){
-//
-//                   $respuesta = ["mensaje" => "Comercio no existe", "status" => "400"];
-//                   return response()->json($respuesta, 400);
-//
-//               }
+               if(empty($consultarif)){
+
+                   $respuesta = ["mensaje" => "Comercio no existe", "error" => "400"];
+                   return response()->json($respuesta, 400);
+
+               }
 
                $datos_cuenta = Cuenta::where('numero_tarjeta', $request->NumeroDeTarjeta)->first();
 
@@ -108,54 +92,36 @@ class OperacionesController extends Controller
 
                            if (empty($nombre)) {
 
-                               $respuesta = ["mensaje" => "Datos invalidos nombre", "status" => "400"];
+                               $respuesta = ["mensaje" => "Datos invalidos", "error" => "400"];
                                return response()->json($respuesta, 400);
                            }
 
                        } else {
 
-                           $respuesta = ["mensaje" => "Datos invalidos cedula", "status" => "400"];
+                           $respuesta = ["mensaje" => "Datos invalidos cedula", "error" => "400"];
                            return response()->json($respuesta, 400);
                        }
                    } else {
 
-                       $respuesta = ["mensaje" => "Tarjeta vencida ", "status" => "400"];
+                       $respuesta = ["mensaje" => "Tarjeta vencida ", "error" => "400"];
                        return response()->json($respuesta, 400);
                    }
 
                } else {
-                   $respuesta = ["mensaje" => "Tarjeta invalida", "status" => "400"];
+                   $respuesta = ["mensaje" => "Tarjeta invalida", "error" => "400"];
                    return response()->json($respuesta, 400);
 
                }
 
 
-              $data_user = User::where('remember_token', $token)->first();
-              // print_r($data_user->remember_token);
+              $data_user = User::where('remember_token', $request->token)->first();
                $cuenta_destino = Cuenta::where('id', $data_user->id)->first();
-
-
-               if(empty( $data_user->remember_token)){
-
-                   $respuesta = ["mensaje" => "Token invalido ", "status" => "400"];
-                   return response()->json($respuesta, 400);
-
-               }
-
-
-               $token_rif=Juridica::where('user_id', $data_user->id)->first(); //comprobar que el token coincida con el rif del comercio
-
-
-               if($token_rif-> rif != $rif){
-                   $respuesta = ["mensaje" => "Datos invalidos token y rif no coinciden ", "status" => "400"];
-                   return response()->json($respuesta, 400);
-
-               }
+               // $cuenta_destino= $numero_cuenta_destino;
 
 
                if ($data_user->afiliacion_comercial == 0) {
 
-                   $respuesta = ["mensaje" => "Actualmente no se encuentra afiliado a este servicio.", "status" => "400"];
+                   $respuesta = ["mensaje" => "Actualmente no se encuentra afiliado a este servicio.", "error" => "400"];
                    return response()->json($respuesta, 400);
 
                } else {
@@ -163,7 +129,7 @@ class OperacionesController extends Controller
 
                    if ($cuenta_origen->cupo_disponible < $request->Monto) {
 
-                       $respuesta = ["mensaje" => "Credito insuficiente", "status" => "100"];
+                       $respuesta = ["mensaje" => "Credito insuficiente", "error" => "100"];
                        return response()->json($respuesta, 400);
 
                    } else {
@@ -185,7 +151,7 @@ class OperacionesController extends Controller
 
 
 
-                       $respuesta = ["mensaje" => "Transaccion Aprobada", "status" => "200"];
+                       $respuesta = ["mensaje" => "Transaccion Aprobada", "data" => "200"];
                        return response()->json($respuesta, 200);
                    }
 
@@ -199,7 +165,7 @@ class OperacionesController extends Controller
                if($banco_id != '01' and $banco_id != '02' ){
 
                    //print_r('ninguno ');
-                   $respuesta = ["mensaje" => "Datos invalidos banco no existe", "status" => "400"];
+                   $respuesta = ["mensaje" => "Datos invalidos banco no existe", "error" => "400"];
                   return response()->json($respuesta, 400);
 
                }
@@ -208,40 +174,58 @@ class OperacionesController extends Controller
                if ($banco_id == '01') // Banco NJG
                {
                    //print_r('juan ');
-                   $client = new Client([
-                       'base_uri' => 'https://njg.herokuapp.com/users/pagar',
-                       'timeout'  => 2.0,
-                   ]);
+                  $client = new Client([
+                                        'timeout'  => 2.0
+                                        ]);
 
-                   $response = $client->request('POST', $request);
+                  $Data = [
+                  "NumeroDeTarjeta" => $request->NumeroDeTarjeta,
+                  "Titular" => $request->Titular,
+                  "Titular_CI" => $request->Titular_CI,
+                  "FechaDeVencimiento" => $request->FechaDeVencimiento,
+                  "NumeroPedido" => $request->NumeroPedido,
+                  "rif_comercio" => $request->rif_comercio,
+                  "rif_comercio" => $request->rif_comercio,
+                  "Monto" => $request->Monto,
+                  "Monto" => $request->Monto,
+                  "token" => $request->token
+                  ];
 
-                   return json_decode($response->getBody()->getContents());
+                   $response = $client->post('https://njg.herokuapp.com/users/pagar', ['form_params' => $Data]);
+                   return json_decode($response->getBody()->getContents(),200);
+
+
+                
 
                }
 
               if ($banco_id == '02') // Banco Unibank
               {
-                  print_r('francisco ');
+                  //print_r('francisco ');
                    $client = new Client([
-                       // Base URI is used with relative requests
-                       'base_uri' => 'https://apiunibank.herokuapp.com/usuarios/tarjeta-credito/pago',
-                       // You can set any number of default request options.
-                       'timeout'  => 2.0,
-                   ]);
+                                        'timeout'  => 2.0
+                                        ]);
 
-                   $response = $client->request('POST', 'prueba');
+                  $Data = [
+                  "NumeroDeTarjeta" => $request->NumeroDeTarjeta,
+                  "Titular" => $request->Titular,
+                  "Titular_CI" => $request->Titular_CI,
+                  "FechaDeVencimiento" => $request->FechaDeVencimiento,
+                  "NumeroPedido" => $request->NumeroPedido,
+                  "rif_comercio" => $request->rif_comercio,
+                  "rif_comercio" => $request->rif_comercio,
+                  "Monto" => $request->Monto,
+                  "Monto" => $request->Monto,
+                  "token" => $request->token
+                  ];
 
-                   return json_decode($response->getBody()->getContents());
+                   $response = $client->post('https://apiunibank.herokuapp.com/usuarios/tarjetas-credito/pago', ['form_params' => $Data]);
+                   return json_decode($response->getBody()->getContents(),200);
                }
 
 
        }
 
-       }
-       else{ // bad request
-
-           $respuesta = ["mensaje" => "Datos invalidos", "status" => "400"];
-           return response()->json($respuesta, 400);
        }
 
    }
