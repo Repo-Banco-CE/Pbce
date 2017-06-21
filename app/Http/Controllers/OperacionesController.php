@@ -191,7 +191,7 @@ class OperacionesController extends Controller
                   "token" => $request->token
                   ];
 
-                   $response = $client->post('https://njg.herokuapp.com/users/pagar', ['form_params' => $Data]);
+                   $response = $client->post('https://njg.herokuapp.com/users/routing', ['form_params' => $Data]);
                    return json_decode($response->getBody()->getContents(),200);
 
 
