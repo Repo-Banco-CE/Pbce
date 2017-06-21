@@ -36,7 +36,17 @@
         <li><a href="{{ route('cuentas.show', Auth::user()) }}">Consultar Tarjeta</a></li> 
         <li><a href="{{ route('cuenta.pagar-tarjeta') }}">Pagar Tarjeta</a></li>
       @endif   
-        <li><a href="{{ route('cuenta.movimientos') }}">Movimientos</a></li>
+        
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            Movimientos <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+           <li><a href="{{ route('cuenta.movimientos') }}">Cuenta</a></li>
+            <li><a href="{{ route('cuenta.movimientos.tarjeta') }}" >Tarjeta</a></li>
+          </ul>
+        </li>
 
       @if(Auth::user()->tipo == 'juridico')
         <li class="dropdown">
@@ -62,11 +72,8 @@
         </li>
       @endif
         <li>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Transferencias<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="{{ route("cuenta.transferencia")}}">Mismo Banco</a></li>
-              <li> <a href="#">Otros Bancos</a> </li>
-            </ul>
+            <a href="{{ route("cuenta.transferencia")}}" class="dropdown-toggle" >Transferencias</a>
+           
         </li>
         
       </ul>

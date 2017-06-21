@@ -61,6 +61,12 @@ Route::group(['prefix' =>'admin', 'middleware' => 'auth'],function(){
 		'as'	=>	'cuenta.movimientos' 
 	]);
 
+	Route::get('cuenta/movimientos/tarjeta', [
+
+		'uses'	=>	'MovimientosController@tarjeta',
+		'as'	=>	'cuenta.movimientos.tarjeta' 
+	]);
+
 	Route::get('cuenta/transferencia', ['as'	=>	'cuenta.transferencia' ,function(){
 
 		$cuentas= Cuenta::all();

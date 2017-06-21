@@ -44,64 +44,23 @@ class MovimientosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function tarjeta()
     {
-        //
-    }
+        $cuenta_movimiento= Cuenta_Movimiento::all();
+        $user_mov=[];
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        foreach ($cuenta_movimiento as $movimiento) {
+        
+        //        printf($movimiento->id.'<br>');
+                if ($movimiento->cuenta_id == Auth::user()->id) {
+                     
+                    $mov= Movimientos::find($movimiento->movimiento_id);    
+                    array_push($user_mov, $mov);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+                    }    
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+   //     dd($user_mov);
+        return view('admin.movimientos.tarjetas')->with("user_mov",$user_mov);
     }
 }

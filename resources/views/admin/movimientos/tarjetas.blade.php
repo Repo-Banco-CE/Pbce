@@ -14,7 +14,7 @@
 
 @endsection
 
-@section('title', 'Movimientos Cuenta')
+@section('title', 'Movimientos Tarjeta')
 
 @section('content')
 
@@ -32,16 +32,16 @@
 
 				@foreach($user_mov as $mov)
 
-				@if($mov->descripcion == 'Transferencia')
-					<tr>
-						<td>{{ $mov->descripcion }}</td>
-						<td>{{ $mov->monto }}</td>
-						<td>{{ $mov->dc }}</td>
-						<td>{{ $mov->saldo }}</td>
-						<td>{{ $mov->created_at }}</td>
-					
-					</tr>
-				@endif
+					@if($mov->descripcion != 'Transferencia')
+						<tr>
+							<td>{{ $mov->descripcion }}</td>
+							<td>{{ $mov->monto }}</td>
+							<td>{{ $mov->dc }}</td>
+							<td>{{ $mov->saldo }}</td>
+							<td>{{ $mov->created_at }}</td>
+						
+						</tr>
+					@endif
 
 				@endforeach
 			</tbody>
