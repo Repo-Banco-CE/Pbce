@@ -196,23 +196,30 @@ class CuentasController extends Controller
 
             }else{
                     $saldo_limite=$request->monto + $cuenta->saldo;
-                if ($saldo_limite > $cuenta->límite ) {
+                if ($saldo_limite > $cuenta->limite ) {
                     # code...
-                    flash('No se realizó la operacion debido a que el pago excede el límite de la tarjeta '.$saldo_limite,'danger');
+                    flash('No se realizó la operacion debido a que el pago excede el límite de la tarjeta ','danger');
                     $cuentas= Cuenta::all();
 
                     return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
                 }else{
 
-                    $cuenta->saldo_cuenta= $cuenta->saldo_cuenta-$request->monto;
-                    $cuenta->saldo= $cuenta->saldo-$request->monto;
-                    $cuenta->cupo_disponible= $cuenta->cupo_disponible+$request->monto;
-                    $cuenta->save();
+                    if (($cuenta->saldo - $request->monto) < 0) {
+                        flash('No puede realizar un pago mayor a la deuda pendiente ','danger');
+                        $cuentas= Cuenta::all();
 
-                    flash('Se ha realizado el pago exitosamente','success');
-                    $cuentas= Cuenta::all();
+                        return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
+                    }else{
+                        $cuenta->saldo_cuenta= $cuenta->saldo_cuenta-$request->monto;
+                        $cuenta->saldo= $cuenta->saldo-$request->monto;
+                        $cuenta->cupo_disponible= $cuenta->cupo_disponible+$request->monto;
+                        $cuenta->save();
 
-                    return view('admin.cuentas.index')->with('cuentas',$cuentas);
+                        flash('Se ha realizado el pago exitosamente','success');
+                        $cuentas= Cuenta::all();
+
+                        return view('admin.cuentas.index')->with('cuentas',$cuentas);
+                    }
                 }
 
             }
