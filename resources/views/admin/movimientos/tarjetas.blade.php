@@ -32,7 +32,7 @@
 
 				@foreach($user_mov as $mov)
 
-					@if($mov->descripcion != 'Transferencia')
+					@if($mov->descripcion == 'Pago con tarjeta')
 						<tr>
 							<td>{{ $mov->descripcion }}</td>
 							<td>{{ $mov->monto }}</td>

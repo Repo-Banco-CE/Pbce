@@ -162,12 +162,12 @@ class OperacionesController extends Controller
                        $descripcion='Pago con tarjeta';
                        $origen="-";
                        $cuenta_origen->cupo_disponible = $cuenta_origen->cupo_disponible - $request->Monto;
-                       $cuenta_origen->saldo = $cuenta_origen->saldo - $request->Monto;
+                       $cuenta_origen->saldo = $cuenta_origen->saldo + $request->Monto;
                        $cuenta_origen->save();
-                       $id_mov= $this->agregar_movimiento($origen,$request->Monto,$cuenta_origen->saldo_cuenta,$descripcion);
+                       $id_mov= $this->agregar_movimiento($origen,$request->Monto,$cuenta_origen->cupo_disponible,$descripcion);
                        $this->agregar_cuenta_movimiento($cuenta_origen->id, $id_mov);
 
-
+                       $descripcion='Conciliacion Pago con tarjeta';
                        $destino="+";
                        $cuenta_destino->saldo_cuenta = $cuenta_destino->saldo_cuenta + $request->Monto;
                        $cuenta_destino->save();

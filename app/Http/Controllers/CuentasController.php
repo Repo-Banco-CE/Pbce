@@ -195,15 +195,25 @@ class CuentasController extends Controller
                 return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
 
             }else{
-                $cuenta->saldo_cuenta= $cuenta->saldo_cuenta-$request->monto;
-                $cuenta->saldo= $cuenta->saldo+$request->monto;
-                $cuenta->cupo_disponible= $cuenta->cupo_disponible+$request->monto;
-                $cuenta->save();
+                    $saldo_limite=$request->monto + $cuenta->saldo;
+                if ($saldo_limite > $cuenta->límite ) {
+                    # code...
+                    flash('No se realizó la operacion debido a que el pago excede el límite de la tarjeta '.$saldo_limite,'danger');
+                    $cuentas= Cuenta::all();
 
-                flash('Se ha realizado el pago exitosamente','success');
-                $cuentas= Cuenta::all();
+                    return view('admin.cuentas.pagar-tarjeta')->with('cuentas',$cuentas);
+                }else{
 
-                return view('admin.cuentas.index')->with('cuentas',$cuentas);
+                    $cuenta->saldo_cuenta= $cuenta->saldo_cuenta-$request->monto;
+                    $cuenta->saldo= $cuenta->saldo-$request->monto;
+                    $cuenta->cupo_disponible= $cuenta->cupo_disponible+$request->monto;
+                    $cuenta->save();
+
+                    flash('Se ha realizado el pago exitosamente','success');
+                    $cuentas= Cuenta::all();
+
+                    return view('admin.cuentas.index')->with('cuentas',$cuentas);
+                }
 
             }
             

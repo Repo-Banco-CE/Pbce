@@ -208,7 +208,7 @@ class UsersController extends Controller
         $cuenta->tipo='Corriente';
         $cuenta->saldo_cuenta=500000;
         $cuenta->limite=100000;
-        $cuenta->saldo=100000;
+        $cuenta->saldo=0;
         $cuenta->cupo_disponible=100000;
         $cuenta->fecha_corte="10-7-2017";
         $cuenta->numero_tarjeta=$numero_tarjeta;
